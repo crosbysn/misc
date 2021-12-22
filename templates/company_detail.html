@@ -1,0 +1,69 @@
+
+
+{% extends "base_generic.html" %}
+
+{% load getattribute %}
+{% block content %} 
+
+
+<div class="content_main wf-section">
+ 
+  <h1 class="heading">{{company_object.企业名称}}</h1>
+
+
+
+  <div class="w-layout-grid company_data_grid">
+  {% for potential_field in company_field_names %}    
+      {% if company_object|getattribute:potential_field %}
+      <div class="metadata_pair_block">
+        <div class="metadata_field">
+          <div class="metadata_field_text">{{potential_field}}</div>
+        </div>
+        <div class="metadata_content">
+          <div class="metadata_content_text">{{company_object|getattribute:potential_field}}</div>
+        </div>
+      </div>
+      {% endif %}
+  {% endfor %}
+  </div>
+
+  <h1 class="heading">Operators</h1>
+  <div class="w-layout-grid company_data_grid">
+  {% for position_itr in related_positions %}    
+
+      <div class="metadata_pair_block">
+        <div class="metadata_field">
+          <div class="metadata_field_text">{{position_itr.position_title}}</div>
+        </div>
+        <div class="metadata_content">
+          <div class="metadata_content_text">{{position_itr.position_individual.name}}</div>
+        </div>
+      </div>
+  {% endfor %}
+  </div>
+
+  <h1 class="heading">Links</h1>
+  <div class="w-layout-grid company_data_grid">
+  {% for company_relation_itr in company_links %}    
+
+      <div class="metadata_pair_block">
+        <div class="metadata_field">
+          <div class="metadata_field_text">{{company_relation_itr.relation_type}}</div>
+        </div>
+        <div class="metadata_content">
+          <div class="metadata_content_text">{{company_relation_itr.target_company.企业名称}}</div>
+          {% if company_relation_itr.percent_total %}
+          <div class="metadata_content_text">{{company_relation_itr.percent_total|floatformat:2}}%</div>
+          {% endif %}
+          {% if company_relation_itr.registered_cap %}
+          <div class="metadata_content_text">{{company_relation_itr.registered_cap|floatformat:0}}人民币</div>
+          {% endif %}
+        </div>
+      </div>
+  {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
+
+

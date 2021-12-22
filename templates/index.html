@@ -1,0 +1,19 @@
+
+{% extends "base_generic.html" %}
+
+{% load getattribute %}
+{% block content %} 
+
+
+<div class="searchblock_holder">
+  <div class="form-block w-form">
+    <form id="email-form" name="email-form" data-name="Email Form" method="POST" class="form" action="{% url 'company_search' %}">{% csrf_token %}
+      <label for="name" class="default_text">Company Name</label>
+      <input type="text" class="w-input" maxlength="256" name="name" data-name="Name" placeholder="" id="name">
+      <input type="submit" value="Submit" class="w-button">
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}
