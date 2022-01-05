@@ -17,18 +17,17 @@ import django.contrib.sessions
 from qcc_project.settings import company_field_names, searchform_null
 from mainsite.models import company, individual, position,company_relation
 
-link_text = '''https://uploads-ssl.webflow.com/6101e896e784d553fe534908/css/china-nlp.webflow.d93d18d01.css'''
+link_text = '''https://uploads-ssl.webflow.com/6101e896e784d553fe534908/css/china-nlp.webflow.9eb1fed3c.css'''
 
 
 def company_detail(request, company_name):
-	company_object 		= company.objects.get(企业名称=company_name)
+	company_object 		= company.objects.get(企业名称__icontains=company_name)
 	related_positions 	= position.objects.filter(position_company=company_object).all()
 	company_links 		= company_relation.objects.filter(origin_company=company_object).all()
 	company_links_target= company_relation.objects.filter(target_company=company_object).all()
 
 	context = {
 		'company_links' 	: company_links,
-		'company_links_target' : company_links_target,
 		'related_positions' : related_positions,
 		'company_object' 	: company_object,
 		'style_sheet'       : link_text,
@@ -45,18 +44,23 @@ def index_page(request):
 
 def company_search(request):
 	if request.method == "POST":
+		query_construction = company.objects.all()
 		
-		search_variables = ['name'] 
+		search_variables = ['企业名称__icontains', 'backend_string', '英文名__icontains'] 
 		search_codex	= {} 	
 		for search_variable in search_variables:
-			if len(request.POST.get(search_variable)) != 0 and request.POST.get(search_variable) != searchform_null:
-				search_codex[search_variable] = request.POST.get(search_variable)   
-
+			if type(request.POST.get(search_variable)) is not None:
+				if len(request.POST.get(search_variable)) != 0 and request.POST.get(search_variable) != searchform_null:
+					search_codex[search_variable] = request.POST.get(search_variable)   
 		for key in list(search_codex):
-			print("%s : %s" % (key, search_codex[key]))
+			query_construction = query_construction.filter(**{key: search_codex[key]})
+			print("Added query constraint {} = {}".format(key, search_codex[key]))
+		search_results = query_construction.all()
+
 				
 
 	context = {
 		'style_sheet'       : link_text,
+		'result_item_list' 	: search_results,
 	}
-	return render(request, 'index.html', context)
+	return render(request, 'search_results.html', context)

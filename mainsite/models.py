@@ -32,8 +32,8 @@ company_model_translations = {
 class company(models.Model):
 	backend_string 	= models.CharField(max_length=40) #only actually needs 32, but doesn't hurt to have more space in case system changes. 
 	统社会信用代码  	= models.CharField(max_length=200,default="NULL")
-	注册资本			= models.CharField(max_length=200,default="NULL")
 	组织机构代码 		= models.CharField(max_length=200,default="NULL")
+	注册资本			= models.CharField(max_length=200,default="NULL")
 	企业类型			= models.CharField(max_length=200,default="NULL")
 	所属行业			= models.CharField(max_length=200,default="NULL")
 	人员规模			= models.CharField(max_length=200,default="NULL")
@@ -97,6 +97,8 @@ class company(models.Model):
 	last_updated 	= models.DateField(auto_now=True)
 	relations_check = models.BooleanField(default=False)
 	placeholder 	= models.BooleanField(default=False)
+	offline_json_raw = models.TextField(max_length=50000, default="NULL")
+
 	def __str__(self):
 		return self.backend_string
 
@@ -135,7 +137,13 @@ class position(models.Model):
 	def __str__(self):
 		self.position_individual.name
 
+class unlinked_position_figure(models.Model):
+	name 				= models.CharField(max_length=50)
+	position_company  	= models.ForeignKey(company, related_name="unlinked_position_company", on_delete=models.CASCADE, blank=False, null=False)
+	position_title     	= models.CharField(max_length=50)
 
+	def __str__(self):
+		self.name
 #equity is what company owns, ownership is who owns them (equity is down, ownership is up)
 
 class relation_tag_sub(models.Model): # need to come back to tags because it appears they are different depending on type? adding a field that just captures the full dictionary result of each tag for now to prevent data loss, will come back to this later if info is needed
@@ -155,7 +163,7 @@ class company_relation(models.Model):
 	percent 		= models.DecimalField(default=0,decimal_places = 5, max_digits=8, blank=True, null=True)
 	percent_total 	= models.DecimalField(help_text="Value listed in QCC API response, carried over for data completeness.",blank=True, null=True,decimal_places = 5, max_digits=8)
 	org 			= models.IntegerField(help_text="Value listed in QCC API response, carried over for data completeness.",default=0)
-	company_code 	= models.IntegerField(help_text="Value listed in QCC API response, carried over for data completeness.",default=0)
+	company_code 	= models.CharField(help_text="Value listed in QCC API response, carried over for data completeness.",blank=True, null=True, max_length=50)
 	shouldcapi  	= models.DecimalField(blank=True, null=True, decimal_places = 6, max_digits=21)
 	stockrightnum	= models.CharField(max_length=200, help_text="Value listed in QCC API response, carried over for data completeness.", default="NULL")
 	detailcount 	= models.IntegerField(help_text="Value listed in QCC API response, carried over for data completeness.", default=0)
@@ -167,7 +175,11 @@ class company_relation(models.Model):
 	detaillist 		= models.CharField(max_length=200, help_text="Value listed in QCC API response, carried over for data completeness.", default="NULL")
 	type 			= models.CharField(max_length=200, help_text="Value listed in QCC API response, carried over for data completeness.", default="NULL")
 	pulled_date		= models.DateField(auto_now_add=True)
-
+	tags_raw 		= models.CharField(max_length=2000, blank=True, null=True)
+	original_response = models.CharField(max_length=5000)	
+	index_page_source = models.CharField(max_length=50, default="CREATED FROM RECORD WITHOUT INDEX RECORDED.")
+	raw_to_fields_attempted = models.BooleanField(default=False)
+	raw_to_fields_successful = models.BooleanField(default=False)
 	def __str__(self):
 		self_string = "{}-({})".format(self.target_company, self.origin_company)
 		return self_string
@@ -191,7 +203,7 @@ class figure_relation(models.Model):
 	percent 		= models.DecimalField(default=0,decimal_places = 5, max_digits=8, blank=True, null=True)
 	percent_total 	= models.DecimalField(help_text="Value listed in QCC API response, carried over for data completeness.",blank=True, null=True,decimal_places = 5, max_digits=8)
 	org 			= models.IntegerField(help_text="Value listed in QCC API response, carried over for data completeness.",default=0)
-	company_code 	= models.IntegerField(help_text="Value listed in QCC API response, carried over for data completeness.",default=0)
+	company_code 	= models.CharField(help_text="Value listed in QCC API response, carried over for data completeness.",blank=True, null=True, max_length=50)
 	shouldcapi  	= models.DecimalField(blank=True, null=True, decimal_places = 6, max_digits=21)
 	stockrightnum	= models.CharField(max_length=200, help_text="Value listed in QCC API response, carried over for data completeness.", default="NULL")
 	detailcount 	= models.IntegerField(help_text="Value listed in QCC API response, carried over for data completeness.", default=0)

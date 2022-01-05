@@ -306,3 +306,5 @@ def get_company_page(id_string):
 			print("Company with name/string pair {}/{} not present, created basic object with error flag.".format(formatted_name, id_string))
 		company_obj.error_flag = True
 		company_obj.save()
+
+

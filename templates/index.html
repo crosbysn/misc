@@ -8,8 +8,12 @@
 <div class="searchblock_holder">
   <div class="form-block w-form">
     <form id="email-form" name="email-form" data-name="Email Form" method="POST" class="form" action="{% url 'company_search' %}">{% csrf_token %}
-      <label for="name" class="default_text">Company Name</label>
-      <input type="text" class="w-input" maxlength="256" name="name" data-name="Name" placeholder="" id="name">
+      <label for="企业名称__icontains" class="default_text">Company Name</label>
+      <input type="text" class="w-input" maxlength="256" name="企业名称__icontains" data-name="企业名称__icontains" placeholder="" id="企业名称__icontains">
+      <label for="backend_string" class="default_text">Company ID</label>
+      <input type="text" class="w-input" maxlength="256" name="backend_string" data-name="backend_string" placeholder="" id="backend_string">
+      <label for="英文名__icontains" class="default_text">Company Name (English)</label>
+      <input type="text" class="w-input" maxlength="256" name="英文名__icontains" data-name="英文名__icontains" placeholder="" id="英文名__icontains">
       <input type="submit" value="Submit" class="w-button">
     </form>
   </div>

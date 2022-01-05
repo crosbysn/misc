@@ -82,19 +82,32 @@ WSGI_APPLICATION = 'qcc_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-
+#local
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'qcc',
-        'USER': 'server',
+        'NAME': 'qcc_mk2',
+        'USER': 'qcc_server',
         'PASSWORD': '6Ndtcx2859xsUkMgCFY9',
         'HOST': 'localhost',
         'PORT': '9999',
     }
 }
 
+#online
 
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'qcc_mk2',
+        'USER': 'qcc_server',
+        'PASSWORD': '6Ndtcx2859xsUkMgCFY9',
+        'HOST': 'crosbysn-2455.postgres.pythonanywhere-services.com',
+        'PORT': '12455',
+    }
+}
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -214,3 +227,4 @@ subregion_codes = {'g_AH': ['/g_AH_340100', '/g_AH_340200', '/g_AH_340300', '/g_
 
 
 searchform_null = 'NULL'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

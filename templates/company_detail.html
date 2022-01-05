@@ -9,7 +9,7 @@
 <div class="content_main wf-section">
  
   <h1 class="heading">{{company_object.企业名称}}</h1>
-
+  <p class="warning">**NOTE** Some records may only have the company name. This is because they've been recorded while processing company-to-company relations and haven't been targeted by the scrape directly yet. They will be filled in later. </p>
 
 
   <div class="w-layout-grid company_data_grid">
@@ -43,27 +43,20 @@
   </div>
 
   <h1 class="heading">Links</h1>
-  <div class="w-layout-grid company_data_grid">
+  <p class="warning">**NOTE** Company to Company relations are still being processed, this demo shows the raw server response intercepted by the scraper. Ownership direction is also recorded, but not shown here.</p>
+  <div class="company_data_grid">
+
   {% for company_relation_itr in company_links %}    
 
       <div class="metadata_pair_block">
         <div class="metadata_field">
-          <div class="metadata_field_text">{{company_relation_itr.relation_type}}</div>
+            <a href="{{company_relation_itr.target_company.get_absolute_url}}" class="metadata_content_text">{{company_relation_itr.target_company.企业名称}}</a>
         </div>
-        <div class="metadata_content">
-          <div class="metadata_content_text">{{company_relation_itr.target_company.企业名称}}</div>
-          {% if company_relation_itr.percent_total %}
-          <div class="metadata_content_text">{{company_relation_itr.percent_total|floatformat:2}}%</div>
-          {% endif %}
-          {% if company_relation_itr.registered_cap %}
-          <div class="metadata_content_text">{{company_relation_itr.registered_cap|floatformat:0}}人民币</div>
-          {% endif %}
-        </div>
+        <div class="companydata_content">
+          <div class="company_basic_field">{{company_relation_itr.original_response}}</div>
+      </div>
       </div>
   {% endfor %}
   </div>
 </div>
-
 {% endblock %}
-
-

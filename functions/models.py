@@ -7,6 +7,7 @@ class index_pages(models.Model):
 	index_code			= models.CharField(max_length=15,default="NULL")
 	emptied 			= models.BooleanField(default=False)
 	next_page 			= models.IntegerField(default=0)
+	checked_out 		= models.BooleanField(default=False)
 
 
 class skipped_company(models.Model):
